@@ -18,32 +18,38 @@ USE `Conservatorio` ;
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`Orquestras`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`Orquestras` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`Orquestras` (
-  `idOrquestra` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `cidade` VARCHAR(45) NOT NULL,
   `pais` VARCHAR(45) NOT NULL,
   `dataCriacao` DATE NOT NULL,
-  PRIMARY KEY (`idOrquestra`),
-  UNIQUE INDEX `idOrquestras_UNIQUE` (`idOrquestra` ASC) VISIBLE)
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `idOrquestras_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`Sinfonias`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`Sinfonias` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`Sinfonias` (
-  `idSinfonia` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
-  `compositor` VARCHAR(10) NOT NULL,
+  `compositor` VARCHAR(50) NOT NULL,
   `dataCriacao` DATE NOT NULL,
-  PRIMARY KEY (`idSinfonia`))
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`Musicos`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`Musicos` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`Musicos` (
   `rg` INT NOT NULL,
   `nome` VARCHAR(100) NOT NULL,
@@ -56,27 +62,31 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`Instrumentos`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`Instrumentos` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`Instrumentos` (
-  `idInstrumento` INT NOT NULL AUTO_INCREMENT,
-  `nomeInstrumento` VARCHAR(45) NOT NULL,
-  `categoriaInstrumento` VARCHAR(45) NULL,
-  PRIMARY KEY (`idInstrumento`))
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `categoria` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`Funcao`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`Funcao` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`Funcao` (
-  `idFuncao` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(45) NOT NULL,
   `idInstrumento` INT NULL,
-  PRIMARY KEY (`idFuncao`),
+  PRIMARY KEY (`id`),
   INDEX `idInstrumento_idx` (`idInstrumento` ASC) VISIBLE,
   CONSTRAINT `idInstrumento`
     FOREIGN KEY (`idInstrumento`)
-    REFERENCES `Conservatorio`.`Instrumentos` (`idInstrumento`)
-    ON DELETE NO ACTION
+    REFERENCES `Conservatorio`.`Instrumentos` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -84,20 +94,22 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`orquestraMusico`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`orquestraMusico` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`orquestraMusico` (
   `idMusico` INT NOT NULL,
   `idOrquestra` INT NOT NULL,
   PRIMARY KEY (`idMusico`, `idOrquestra`),
   INDEX `idOrquestra_idx` (`idOrquestra` ASC) VISIBLE,
-  CONSTRAINT `idOrquestra`
+  CONSTRAINT `idOrquestra1`
     FOREIGN KEY (`idOrquestra`)
-    REFERENCES `Conservatorio`.`Orquestras` (`idOrquestra`)
-    ON DELETE NO ACTION
+    REFERENCES `Conservatorio`.`Orquestras` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `idMusico1`
     FOREIGN KEY (`idMusico`)
     REFERENCES `Conservatorio`.`Musicos` (`rg`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -105,6 +117,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`musicoFuncao`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`musicoFuncao` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`musicoFuncao` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `idMusico` INT NOT NULL,
@@ -117,18 +131,18 @@ CREATE TABLE IF NOT EXISTS `Conservatorio`.`musicoFuncao` (
   INDEX `idMusico_idx` (`idMusico` ASC) VISIBLE,
   CONSTRAINT `idFuncao`
     FOREIGN KEY (`idFuncao`)
-    REFERENCES `Conservatorio`.`Funcao` (`idFuncao`)
-    ON DELETE NO ACTION
+    REFERENCES `Conservatorio`.`Funcao` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT `idSinfonia`
+  CONSTRAINT `idSinfonia1`
     FOREIGN KEY (`idSinfonia`)
-    REFERENCES `Conservatorio`.`Sinfonias` (`idSinfonia`)
-    ON DELETE NO ACTION
+    REFERENCES `Conservatorio`.`Sinfonias` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT `idMusico2`
+  CONSTRAINT `idMusico`
     FOREIGN KEY (`idMusico`)
     REFERENCES `Conservatorio`.`Musicos` (`rg`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -136,20 +150,22 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `Conservatorio`.`apresentacao`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Conservatorio`.`apresentacao` ;
+
 CREATE TABLE IF NOT EXISTS `Conservatorio`.`apresentacao` (
   `idOrquestra` INT NOT NULL,
   `idSinfonia` INT NOT NULL,
   PRIMARY KEY (`idOrquestra`, `idSinfonia`),
   INDEX `idSinfonia_idx` (`idSinfonia` ASC) VISIBLE,
-  CONSTRAINT `idOrquestra1`
+  CONSTRAINT `idOrquestra`
     FOREIGN KEY (`idOrquestra`)
-    REFERENCES `Conservatorio`.`Orquestras` (`idOrquestra`)
-    ON DELETE NO ACTION
+    REFERENCES `Conservatorio`.`Orquestras` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
-  CONSTRAINT `idSinfonia1`
+  CONSTRAINT `idSinfonia`
     FOREIGN KEY (`idSinfonia`)
-    REFERENCES `Conservatorio`.`Sinfonias` (`idSinfonia`)
-    ON DELETE NO ACTION
+    REFERENCES `Conservatorio`.`Sinfonias` (`id`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
